@@ -6,7 +6,7 @@ var path = require('path');
 
 var pages = [{
 	route : '',
-	output : 'hello'
+	output : 'こんにちは'
 }, {
 	route : 'jp',
 	output : 'こんにちははjpです'
@@ -15,20 +15,21 @@ var pages = [{
 	output : function(){return 'ニーハオは'+ this.route;}
 }];
 
+//pathによって異なるoutputを行うサーバ
 http.createServer(function(req,res){
 	var lookup = path.basename(decodeURI(req.url));
-	console.log('pathは「'　+　lookup　+　'」');
+	console.log('pathは「'　+　lookup　+ '」');
 	pages.forEach(function(page){
-		if(page.route === lookup){
+		console.log('pageは「'　+　page.route　+ '」');
+		if(lookup === page.route){
 			res.writeHead(200,{'Content-Type':'text/html; charset = utf-8'});
 			res.end(typeof page.output === 'function' ? page.output() : page.output);
 		}
-		if(!res.finished){
+	});
+	if(!res.finished){
 			res.writeHead(404);
 			res.end('file not found');
-		}
-	});
+	}
 }).listen(8000);
 
-//ポート待ち受け番号表示
 console.log('server is runnging on 8000');
